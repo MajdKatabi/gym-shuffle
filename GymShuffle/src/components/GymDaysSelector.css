@@ -1,0 +1,61 @@
+.gym-days {
+    text-align: center;
+    padding: 40px;
+    border-radius: 10px;
+    margin: 50px auto;
+}
+
+h2 {
+    font-size: 2.75em;
+    color: lightcoral;
+    margin-bottom: 75px;
+}
+
+.days-containter {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+}
+
+.day-button {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-right: 35px;
+    font-size: 2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.day-button.selected {
+    background-color: darksalmon;
+    color: white;
+}
+
+.day-button:hover {
+    background-color: #4caf50;
+}
+
+.continue-button {
+    background: linear-gradient(to right, #F08080, #D16459);
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 175px 75px;
+}
+
+.continue-button:hover{
+    transform: translateY(-4px);
+}
+
+.error-message {
+    color: red;
+    padding-top: 40px;
+}

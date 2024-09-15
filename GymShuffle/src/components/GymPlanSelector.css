@@ -1,0 +1,149 @@
+body {
+    color: salmon; 
+    font-family: 'Arial', sans-serif;
+}
+
+.gym-plan {
+    text-align: center;
+    max-width: 1000px;
+    margin: 25px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100vh; /* Full viewport height */
+}
+
+.exercise-inputs {
+    text-align: center;
+}
+
+.exercise-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.exercise-item {
+    position: relative;
+    text-align: center;
+    font-size: 1.2em;
+    flex: 1 1 45%;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #333;  
+    color: white; 
+    font-size: 1em;
+    padding-right: 40px;  /* Space for clear and dropdown button */
+    margin-top: 5px;
+}
+
+.clear-button, .dropdown-button {
+    position: absolute;
+    top: 53%;
+    transform: translateX(100%);
+    cursor: pointer;
+    color: white;  
+}
+
+.clear-button {
+    right: 35px;  /* X button slightly to the left of dropdown */
+}
+
+.dropdown-button {
+    right: 10px;  /* Dropdown at the far right */
+}
+
+input[type="text"]:hover,
+input[type="text"]:focus {
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);  /* Add shadow when focused */
+}
+
+.suggestions-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestions-list li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggestions-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.next-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 15px 25px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 150px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 30px;
+    align-self: center; 
+}
+
+.next-button:disabled {
+    background-color: #9e9e9e;
+    cursor: not-allowed;
+}
+
+.next-button:hover:not(:disabled) {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Sets a specific grid layout for middle image of man lifting */
+.exercise-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 40px 500px; /* Sets gap between columns and rows */
+    align-items: center;
+    justify-content: center;
+}
+
+.exercise-item {
+    position: relative;
+    margin: 10px 0;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #1c1c1c;  
+    color: white;
+}
+
+input[type="text"]:hover, input[type="text"]:focus {
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);  
+}

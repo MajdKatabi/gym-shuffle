@@ -1,0 +1,38 @@
+h1 {
+    font-size: 2.5rem;
+}
+
+.day-selector {
+    display: flex; 
+    justify-content: center;
+    margin: 35px 200px;
+    gap: 100px; 
+    font-size: 2rem;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.day-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.day-item input[type="radio"] {
+    appearance: none; 
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc; 
+    border-radius: 4px; 
+    margin-right: 5px; 
+    cursor: pointer; 
+}
+
+.day-item input[type="radio"]:checked {
+    background-color: #4caf50; 
+    border-color: darkgreen; 
+}
+
+.day-item label {
+    cursor: pointer;
+}
