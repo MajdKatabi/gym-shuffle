@@ -1,17 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './GymPlanSelector.css';
+
+const getExercises = async (value: string) => {
+    const url = `http://localhost:8080/exercises/names?number=76&offset=0&search=${value}`;
+    const options = {
+        method: 'GET', 
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        return data.results.map((exercise: any) => exercise.name);
+    } catch (error) {
+        console.error("Error fetching exercises:", error);
+        return [];
+    }
+}
 
 const GymPlanSelector: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation(); // Allows for single page application
     const selectedDay = location.state?.selectedDay || 1; // Passed selectedDay from GymDaysSelector
     const [currentDay, setCurrentDay] = useState<number>(1);
-    const [exercises, setExercises] = useState<string[][]>(Array(selectedDay).fill(['', '', '', '', '', ''])); // Array of exercises within an array of lengthnumber of days selected
+    const [exercises, setExercises] = useState<string[][]>(Array.from({ length: selectedDay }, () => ['', '', '', '', '', ''])); // Array of exercises within an array of length number of days selected
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [activeField, setActiveField] = useState<number | null>(null);
     const [showDropdown, setShowDropdown] = useState<boolean>(false);
+
+    useEffect(() => {
+        console.log(exercises)
+    }, [exercises]); // Use to ensure array is being updated correctly
 
     const handleExerciseChange = async (dayIndex: number, exerciseIndex: number, value: string, reset: boolean) => {
         const newExercises = [...exercises]; // Cannot modify original state so create a shallow copy
@@ -21,31 +41,19 @@ const GymPlanSelector: React.FC = () => {
             setExercises(newExercises);
         }
         setActiveField(exerciseIndex);
-        setShowDropdown(false);
 
-        /* if (value.length >= 3) {
-            setLoading(true);
-            const url = `https://gym-fit-main-ea7edf6.d2.zuplo.dev/v1/exercises/search?query=${value}`;
-            const options = {
-                method: 'GET',
-                headers: {
-                    'X-RapidAPI-Key': 'ADD KEY HERE',
-                    'X-RapidAPI-Host': 'gym-fit-main-ea7edf6.d2.zuplo.dev'
-                }
-            };
-
-            try {
-                const response = await fetch(url, options);
-                const data = await response.json();
-                const exerciseNames = data.results.map((exercise: any) => exercise.name);
-                setSuggestions(exerciseNames); // Update suggestions state
-            } catch (error) {
-                console.error("Error fetching exercises:", error);
-                setSuggestions([]); 
-            } 
+        if (value.length >= 1) {
+            const exerciseList = await getExercises(value);
+            setSuggestions(exerciseList);
+            if (exerciseList && exerciseList.length) {
+                setShowDropdown(true);
+            } else {
+                setShowDropdown(false);
+            }
         } else {
-            setSuggestions([]); // Clear suggestions if input is less than 3 characters
-        } */
+            setSuggestions([]); // Clear suggestions if input is less than 1 character
+            setShowDropdown(false);
+        } 
     };
 
     const handleSuggestionClick = (dayIndex: number, exerciseIndex: number, suggestion: string) => {
@@ -53,8 +61,27 @@ const GymPlanSelector: React.FC = () => {
         newExercises[dayIndex][exerciseIndex] = suggestion;
         setExercises(newExercises);
         setSuggestions([]); // Clear suggestions after selecting one
+        setShowDropdown(false);
         setActiveField(null);
     };
+
+    const handleDropdownClick = async (activeField: number) => {
+        setActiveField(activeField);
+        if (showDropdown) {
+            setShowDropdown(false);
+            setSuggestions([]);
+            return;
+        }
+        let searchInput;
+        if (exercises[currentDay - 1][activeField] && exercises[currentDay - 1][activeField].length > 0) {
+            searchInput = exercises[currentDay - 1][activeField];
+        } else {
+            searchInput = '';
+        }
+        const exerciseList = await getExercises(searchInput);
+        setSuggestions(exerciseList);
+        setShowDropdown(true);
+    }
 
     const renderExerciseInputs = () => {
         return (
@@ -71,8 +98,10 @@ const GymPlanSelector: React.FC = () => {
                                     value={exercises[currentDay - 1][index]}
                                     onChange={(e) => handleExerciseChange(currentDay - 1, index, e.target.value, false)}
                                     placeholder="Search for an exercise"
-                                    onFocus={() => setActiveField(index)} 
-                                    onClick={() => setShowDropdown(true)} // Show dropdown when clicking on the input
+                                    onClick={() => {
+                                        setShowDropdown(true); 
+                                        setActiveField(index); 
+                                    }} 
                                 />
                                 {exercises[currentDay - 1][index] && (
                                     <span
@@ -84,7 +113,8 @@ const GymPlanSelector: React.FC = () => {
                                 )}
                                 <span
                                     className="dropdown-button"
-                                    onClick={() => setShowDropdown(!showDropdown)}
+                                    style={{ userSelect: 'none' }}
+                                    onClick={async () => handleDropdownClick(index)}
                                 >
                                     &#x25BC; {/* Dropdown Arrow */}
                                 </span>
@@ -103,7 +133,7 @@ const GymPlanSelector: React.FC = () => {
                                     ))}
                                 </ul>
                             )}
-                            {/* Show dropdown with all exercises when clicking the dropdown button */}
+                            {/* Display suggested list of exercises when dropdown button is clicked */}
                             {activeField === index && showDropdown && (
                                 <ul className="suggestions-list">
                                     {suggestions.map((suggestion, i) => (
@@ -131,12 +161,8 @@ const GymPlanSelector: React.FC = () => {
         setErrorMessage('');
         if (currentDay < selectedDay) { // Checks if all exercises for each of the days have been submitted
             setCurrentDay(currentDay + 1);
-            for (let index = 0; index < 6; ++index)
-            {
-                handleExerciseChange(currentDay - 1, index, '', true); // Might cause issues, test when api is active
-            }
         } else {
-            navigate('/gym-shuffle', { state: { selectedDay } });
+            navigate('/gym-shuffle', { state: { selectedDay, exercises } }); // Pass exercises to ShufflePlan
         }
     };
 

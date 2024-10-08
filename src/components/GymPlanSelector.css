@@ -71,12 +71,12 @@ input[type="text"]:focus {
     top: 100%;
     left: 0;
     width: 100%;
-    background: white;
+    background: #333;
     border: 1px solid #ccc;
     border-radius: 4px;
     max-height: 150px;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 2000;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -88,7 +88,7 @@ input[type="text"]:focus {
 }
 
 .suggestions-list li:hover {
-    background-color: #f0f0f0;
+    background-color: #131313;
 }
 
 .next-button {
@@ -145,5 +145,5 @@ input[type="text"] {
 }
 
 input[type="text"]:hover, input[type="text"]:focus {
-    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);  
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 0.3);  
 }
