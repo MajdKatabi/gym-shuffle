@@ -1,5 +1,12 @@
+body {
+    color: salmon; 
+    font-family: 'Arial', sans-serif;
+    background: black;
+}
+
 h1 {
     font-size: 2.5rem;
+    text-align: center;
 }
 
 .day-selector {
@@ -35,4 +42,54 @@ h1 {
 
 .day-item label {
     cursor: pointer;
+}
+
+.exercise-boxes {
+    text-align: center;
+    max-width: 1000px;
+    margin: 25px auto;
+}
+
+.exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    margin-left: 20px;
+    gap: 10px 300px; 
+    align-items: center;
+    justify-content: center;
+}
+
+.exercise-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 210px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #1e1d1d;  
+    color: white; 
+    font-size: 1em;
+    margin-top: 5px;
+}
+
+.exercise-set {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 250px;
+    margin-bottom: 5px;
+    font-size: 1.2em;
+}
+
+.exercise-box.selected {
+    border-color: #4caf50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.exercise-box:hover {
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 0.3);  
 }

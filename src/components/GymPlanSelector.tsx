@@ -89,7 +89,7 @@ const GymPlanSelector: React.FC = () => {
                 <h2>Day {currentDay}</h2>
                 <div className="exercise-list">
                     {Array.from({ length: 6 }).map((_, index) => (
-                        <div key={index} className="exercise-item" style={{ position: 'relative' }}>
+                        <div key={index} className="exercise-number" style={{ position: 'relative' }}>
                             <label>Exercise {index + 1}</label>
                             <div className="search-bar-container">
                                 <input
