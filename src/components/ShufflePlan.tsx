@@ -1,6 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import './ShufflePlan.css';
+import '../styles/ShufflePlan.css';
+
+const fetchAlternatives = async (exercise: string) => {
+    const slug = exercise.toLowerCase().replace(/\s+/g, '-');
+    const url = `http://localhost:8080/exercises/${slug}/alternatives`;
+    const options = { method: 'GET' };
+
+    try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        return data.alternatives || [];
+    } catch (error) {
+        console.error("Error fetching alternatives:", error);
+        return [];
+    }
+};
+
+const fetchVariations = async (exercise: string) => {
+    const slug = exercise.toLowerCase().replace(/\s+/g, '-');
+    const url = `http://localhost:8080/exercises/${slug}/variations`;
+    const options = { method: 'GET' };
+
+    try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        return data.variations || [];
+    } catch (error) {
+        console.error("Error fetching variations:", error);
+        return [];
+    }
+};
 
 const ShufflePlan: React.FC = () => {
     const location = useLocation();
@@ -8,37 +38,56 @@ const ShufflePlan: React.FC = () => {
     const exercises = location.state.exercises; 
     const [clickedDay, setClickedDay] = useState<number>(1);
     const [selectedExercise, setSelectedExercise] = useState<number | null>(null);
+    const [indexOfDisplayedExeriseGrid, setIndexOfDisplayedExeriseGrid] = useState<number | undefined>(undefined);
+    const [alternatives, setAlternatives] = useState<{ name: string; _id: string }[]>([]);
+    const [variations, setVariations] = useState<{ name: string; _id: string }[]>([]);
 
     useEffect(() => {
         console.log(exercises);
-    }, [exercises]); // Use to ensure array is being updated correctly
+    }, [exercises]);
 
-    const renderDaySelector = () => {
+    const handleExerciseClick = async (index: number) => {
+        setSelectedExercise(selectedExercise === index ? null : index);
+        setIndexOfDisplayedExeriseGrid(index);
+
+        const selectedExerciseName = exercises[clickedDay - 1][index];
+        if (selectedExerciseName) {
+            const fetchedAlternatives = await fetchAlternatives(selectedExerciseName);
+            const fetchedVariations = await fetchVariations(selectedExerciseName);
+            setAlternatives(fetchedAlternatives);
+            setVariations(fetchedVariations);
+        }
+    };
+
+    const renderAlternativesAndVariations = () => {
         return (
-            <div>
-                <h1>Select a day to alternate exercises</h1>
-                <div className="day-selector">
-                    {Array.from({ length: selectedDay }).map((_, index) => (
-                        <div key={index} className="day-item">
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="selectedDay"
-                                    value={index + 1}
-                                    checked={clickedDay === index + 1}
-                                    onChange={() => { setClickedDay(index + 1); setSelectedExercise(null)}}
-                                />
-                                Day {index + 1}
-                            </label>
-                        </div>
-                    ))}
+            <div className="alternatives-variations">
+                <h2>Alternatives</h2>
+                <div className="alternatives-grid">
+                    {alternatives.length > 0 ? (
+                        alternatives.map((alt) => (
+                            <div key={alt._id} className="alternative-box">
+                                {alt.name}
+                            </div>
+                        ))
+                    ) : (
+                        <p>No alternatives available.</p>
+                    )}
+                </div>
+                <h2>Variations</h2>
+                <div className="variations-grid">
+                    {variations.length > 0 ? (
+                        variations.map((varia) => (
+                            <div key={varia._id} className="variation-box">
+                                {varia.name}
+                            </div>
+                        ))
+                    ) : (
+                        <p>No variations available.</p>
+                    )}
                 </div>
             </div>
         );
-    };
-
-    const handleExerciseClick = (index: number) => {
-        setSelectedExercise(selectedExercise === index ? null : index);
     };
 
     const renderExercises = () => {
@@ -50,25 +99,27 @@ const ShufflePlan: React.FC = () => {
                         <div key={index} className="exercise-set" style={{ position: 'relative' }}>
                             <label>Exercise {index + 1}</label>
                             <div
-                                key={index}
                                 className={`exercise-box ${(selectedExercise === index && exercises[clickedDay - 1][index]) ? 'selected' : ''}`}
                                 onClick={() => handleExerciseClick(index)}
                             >
                                 <div className="exercise-container">
-                                    {exercise}
+                                    {exercise}      
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
+                {indexOfDisplayedExeriseGrid !== undefined && (
+                    renderAlternativesAndVariations() 
+                )}
             </div>
         );
     };
 
     return (
         <div>
-            {renderDaySelector()}
-            {renderExercises()}
+            {renderExercises()} 
+            <hr></hr>
         </div>
     );
 };

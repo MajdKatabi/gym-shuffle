@@ -139,3 +139,16 @@ input[type="text"] {
 input[type="text"]:hover, input[type="text"]:focus {
     box-shadow: 0 5px 10px rgba(255, 255, 255, 0.3);  
 }
+
+.alternatives-grid, .variations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+    gap: 10px; 
+    margin-top: 10px; 
+}
+
+.alternative-box, .variation-box {
+    border: 1px solid #ccc; 
+    padding: 10px;
+    text-align: center; 
+}

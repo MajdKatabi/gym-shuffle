@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './GymPlanSelector.css';
+import '../styles/GymPlanSelector.css';
 
 const getExercises = async (value: string) => {
     const url = `http://localhost:8080/exercises/names?number=76&offset=0&search=${value}`;

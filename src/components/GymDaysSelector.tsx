@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-import './GymDaysSelector.css';
+import '../styles/GymDaysSelector.css';
 
 const GymDaysSelector: React.FC = () => {
     const [selectedDay, setSelectedDay] = useState<number | null>(null);
