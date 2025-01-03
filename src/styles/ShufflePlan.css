@@ -4,11 +4,6 @@ body {
     background: black;
 }
 
-h1 {
-    font-size: 2.5rem;
-    text-align: center;
-}
-
 .day-selector {
     display: flex; 
     justify-content: center;
@@ -86,7 +81,7 @@ h1 {
 }
 
 .exercise-box.selected {
-    border-color: #4caf50;
+    border-color: orange;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
@@ -98,4 +93,134 @@ hr {
     margin-top: 50px;
     width: 74.5%;
     border-color: #ccc;
+}
+
+.day-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.day-buttons button {
+    padding: 10px 15px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: #1e1d1d;
+    color: white;
+    margin: 0 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.day-buttons button.active {
+    background-color: orange;
+    color: white;
+}
+
+.day-buttons button:hover {
+    background-color: #4caf50;
+}
+
+.alternative-box,
+.variation-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 210px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #1e1d1d;
+    color: white;
+    font-size: 1em;
+    margin: 5px;
+    transition: box-shadow 0.3s;
+}
+
+.alternative-box:hover,
+.variation-box:hover {
+    box-shadow: 0 5px 10px rgba(255, 255, 255, 0.3);
+}
+
+.alternatives-variations {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.alternatives-grid,
+.variations-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; 
+}
+
+.popup-content {
+    background: #1e1d1d; 
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%; /* Adjust width as needed */
+    max-width: 800px; 
+    position: relative;
+    overflow-y: auto; /* Allow scrolling if content is too long */
+    max-height: 80%; /* Limit height */
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.exercise-info {
+    margin-bottom: 20px; 
+}
+
+.exercise-info h2 {
+    margin: 0; 
+}
+
+.exercise-info h3 {
+    margin: 5px 0; 
+}
+
+.help-links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.help-links button {
+    background-color: #4caf50; 
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.help-links button:hover {
+    background-color: #45a049; 
 }

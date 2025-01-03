@@ -1,6 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import '../styles/ShufflePlan.css';
+import ExercisePopup from './ExercisePopup';
+
+interface ExerciseDetails {
+    name: string;
+    bodyPart: string;
+    target: string;
+    synergist: string;
+    stabilizer: string;
+    instructions: { order: number; description: string }[];
+    alternatives: { name: string; _id: string }[];
+    variations: { name: string; _id: string }[];
+}
+
+interface Muscle {
+    name: string;
+    group: string | null;
+    _id: { $oid: string };
+}
 
 const fetchAlternatives = async (exercise: string) => {
     const slug = exercise.toLowerCase().replace(/\s+/g, '-');
@@ -32,6 +50,21 @@ const fetchVariations = async (exercise: string) => {
     }
 };
 
+const fetchExerciseDetails = async (exerciseName: string) => {
+    const slug = exerciseName.toLowerCase().replace(/\s+/g, '-');
+    const url = `http://localhost:8080/exercises/${slug}/details`;
+    const options = { method: 'GET' };
+
+    try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching exercise details:", error);
+        return null;
+    }
+};
+
 const ShufflePlan: React.FC = () => {
     const location = useLocation();
     const selectedDay = location.state.selectedDay;
@@ -41,55 +74,34 @@ const ShufflePlan: React.FC = () => {
     const [indexOfDisplayedExeriseGrid, setIndexOfDisplayedExeriseGrid] = useState<number | undefined>(undefined);
     const [alternatives, setAlternatives] = useState<{ name: string; _id: string }[]>([]);
     const [variations, setVariations] = useState<{ name: string; _id: string }[]>([]);
+    const [showPopup, setShowPopup] = useState(false);
+    const [selectedExerciseDetails, setSelectedExerciseDetails] = useState<ExerciseDetails | null>(null);
 
     useEffect(() => {
         console.log(exercises);
     }, [exercises]);
 
-    const handleExerciseClick = async (index: number) => {
-        setSelectedExercise(selectedExercise === index ? null : index);
-        setIndexOfDisplayedExeriseGrid(index);
-
-        const selectedExerciseName = exercises[clickedDay - 1][index];
-        if (selectedExerciseName) {
-            const fetchedAlternatives = await fetchAlternatives(selectedExerciseName);
-            const fetchedVariations = await fetchVariations(selectedExerciseName);
-            setAlternatives(fetchedAlternatives);
-            setVariations(fetchedVariations);
-        }
-    };
-
-    const renderAlternativesAndVariations = () => {
+    const renderDayButtons = () => {
         return (
-            <div className="alternatives-variations">
-                <h2>Alternatives</h2>
-                <div className="alternatives-grid">
-                    {alternatives.length > 0 ? (
-                        alternatives.map((alt) => (
-                            <div key={alt._id} className="alternative-box">
-                                {alt.name}
-                            </div>
-                        ))
-                    ) : (
-                        <p>No alternatives available.</p>
-                    )}
-                </div>
-                <h2>Variations</h2>
-                <div className="variations-grid">
-                    {variations.length > 0 ? (
-                        variations.map((varia) => (
-                            <div key={varia._id} className="variation-box">
-                                {varia.name}
-                            </div>
-                        ))
-                    ) : (
-                        <p>No variations available.</p>
-                    )}
-                </div>
+            <div className="day-buttons">
+                {Array.from({ length: selectedDay }, (_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => {
+                            setClickedDay(index + 1)
+                            setSelectedExercise(null);
+                            setAlternatives([]);
+                            setVariations([]); 
+                        }} 
+                        className={clickedDay === index + 1 ? 'active' : ''}
+                    >
+                        Day {index + 1}
+                    </button>
+                ))}
             </div>
         );
     };
-
+    
     const renderExercises = () => {
         return (
             <div className="exercise-boxes">
@@ -111,15 +123,105 @@ const ShufflePlan: React.FC = () => {
                 </div>
                 {indexOfDisplayedExeriseGrid !== undefined && (
                     renderAlternativesAndVariations() 
-                )}
+                )} 
             </div>
         );
     };
 
+    const handleExerciseClick = async (index: number) => {
+        if (selectedExercise === index) {
+            setSelectedExercise(null);
+            setIndexOfDisplayedExeriseGrid(undefined);
+            setAlternatives([]); 
+            setVariations([]); 
+        } else {
+            setSelectedExercise(index);
+            setIndexOfDisplayedExeriseGrid(index);
+
+            const selectedExerciseName = exercises[clickedDay - 1][index];
+            if (selectedExerciseName) {
+                const fetchedAlternatives = await fetchAlternatives(selectedExerciseName);
+                const fetchedVariations = await fetchVariations(selectedExerciseName);
+                setAlternatives(fetchedAlternatives);
+                setVariations(fetchedVariations);
+            }
+        }
+    };
+
+    const renderAlternativesAndVariations = () => {
+        return (
+            <div className="alternatives-variations">
+                <h2>Alternatives</h2>
+                <div className="alternatives-grid">
+                    {alternatives.length > 0 ? (
+                        alternatives.map((alt) => (
+                            <div 
+                                key={alt._id} 
+                                className="alternative-box" 
+                                onClick={() => handleAltVarClick(alt.name)}
+                            >
+                                {alt.name}
+                            </div>
+                        ))
+                    ) : (
+                        <p>No alternatives available.</p>
+                    )}
+                </div>
+                <h2>Variations</h2>
+                <div className="variations-grid">
+                    {variations.length > 0 ? (
+                        variations.map((varia) => (
+                            <div 
+                                key={varia._id} 
+                                className="variation-box" 
+                                onClick={() => handleAltVarClick(varia.name)}
+                            >
+                                {varia.name}
+                            </div>
+                        ))
+                    ) : (
+                        <p>No variations available.</p>
+                    )}
+                </div>
+            </div>
+        );
+    };
+
+    const handleAltVarClick = async (exerciseName: string) => {
+        const fetchedDetails = await fetchExerciseDetails(exerciseName);
+        if (fetchedDetails) {
+            setSelectedExerciseDetails({
+                name: fetchedDetails.name,
+                bodyPart: fetchedDetails.bodyPart,
+                target: fetchedDetails.muscles.Target.map((muscle: Muscle) => muscle.name).join(', '),
+                synergist: fetchedDetails.muscles.Synergist.map((muscle: Muscle) => muscle.name).join(', '),
+                stabilizer: fetchedDetails.muscles.Stabilizer.map((muscle: Muscle) => muscle.name).join(', '),
+                instructions: fetchedDetails.instructions,
+                alternatives: fetchedDetails.alternatives,
+                variations: fetchedDetails.variations,
+            });
+            setShowPopup(true);
+        }
+    };
+
     return (
         <div>
+            <div className="day-navigation">
+                {renderDayButtons()}
+            </div>
             {renderExercises()} 
             <hr></hr>
+            {showPopup && selectedExerciseDetails && (
+                <ExercisePopup
+                    exerciseName={selectedExerciseDetails.name}
+                    bodyPart={selectedExerciseDetails.bodyPart}
+                    target={selectedExerciseDetails.target}
+                    synergist={selectedExerciseDetails.synergist}
+                    stabilizer={selectedExerciseDetails.stabilizer}
+                    details={selectedExerciseDetails}
+                    onClose={() => setShowPopup(false)}
+                />
+            )}
         </div>
     );
 };

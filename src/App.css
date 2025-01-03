@@ -1,6 +1,6 @@
 body {
   background-image: url('../src/assets/MuscleWallpaper.jpg');
-  background-size: cover;
+  background-size: contain;
   background-position: -55px 0px;
 }
 
