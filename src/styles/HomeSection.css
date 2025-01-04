@@ -39,9 +39,3 @@
 .start-button:hover {
     background: orange
 }
-
-.home-image {
-    max-height: 500px;
-    padding-left: 300px;
-    float: right;
-}

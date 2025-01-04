@@ -1,8 +1,4 @@
-body {
-    color: salmon; 
-    font-family: 'Arial', sans-serif;
-    background: black;
-}
+
 
 .day-selector {
     display: flex; 
@@ -81,7 +77,7 @@ body {
 }
 
 .exercise-box.selected {
-    border-color: orange;
+    border-color: coral;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
@@ -113,12 +109,26 @@ hr {
 }
 
 .day-buttons button.active {
-    background-color: orange;
+    background-color: coral;
     color: white;
 }
 
 .day-buttons button:hover {
-    background-color: #4caf50;
+    background-color: salmon;
+}
+
+.alternatives-h2 {
+    display: absolute;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: -5%;
+}
+
+.variations-h2 {
+    display: absolute;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: -5%;
 }
 
 .alternative-box,
@@ -195,14 +205,20 @@ hr {
 
 .exercise-info {
     margin-bottom: 20px; 
+    text-align: left;
 }
 
 .exercise-info h2 {
-    margin: 0; 
+    margin: 0;
+    text-align: center; 
 }
 
 .exercise-info h3 {
     margin: 5px 0; 
+}
+
+.instructions-info {
+    text-align: left;
 }
 
 .help-links {
@@ -223,4 +239,19 @@ hr {
 
 .help-links button:hover {
     background-color: #45a049; 
+}
+
+.no-data-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 210px; 
+    height: 60px; 
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #1e1d1d; 
+    color: white; 
+    font-size: 1em;
+    margin: 5px;
+    transition: box-shadow 0.3s;
 }

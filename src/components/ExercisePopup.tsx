@@ -13,8 +13,6 @@ interface ExercisePopupProps {
     stabilizer: string;
     details: {
         instructions: Instruction[];
-        alternatives: { name: string; _id: string }[];
-        variations: { name: string; _id: string }[];
     };
     onClose: () => void;
 }
@@ -29,7 +27,7 @@ const ExercisePopup: React.FC<ExercisePopupProps> = ({
     onClose,
 }) => {
     const handleSearch = (type: string) => {
-        const searchQuery = `${exerciseName} form`;
+        const searchQuery = `${exerciseName} exercise form`;
         if (type === 'video') {
             window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`, '_blank');
         } else {
@@ -48,32 +46,14 @@ const ExercisePopup: React.FC<ExercisePopupProps> = ({
                     {synergist && <p><strong>Synergist:</strong> {synergist}</p>}
                     {stabilizer && <p><strong>Stabilizer:</strong> {stabilizer}</p>}
                 </div>
-                <h3>Instructions</h3>
-                <ol>
-                    {details.instructions.map((instruction, index) => (
-                        <li key={index}>{instruction.description}</li>
-                    ))}
-                </ol>
-                <h3>Alternatives</h3>
-                {details.alternatives.length > 0 ? (
-                    <ul>
-                        {details.alternatives.map((alt) => (
-                            <li key={alt._id}>{alt.name}</li>
+                <div className="instructions-info">
+                    <h3>Instructions</h3>
+                    <ol>
+                        {details.instructions.map((instruction, index) => (
+                            <li key={index}>{instruction.description}</li>
                         ))}
-                    </ul>
-                ) : (
-                    <p>No alternatives</p>
-                )}
-                <h3>Variations</h3>
-                {details.variations.length > 0 ? (
-                    <ul>
-                        {details.variations.map((varia) => (
-                            <li key={varia._id}>{varia.name}</li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>No variations</p>
-                )}
+                    </ol>
+                </div>
                 <div className="help-links">
                     <button onClick={() => handleSearch('video')}>Watch Videos</button>
                     <button onClick={() => handleSearch('image')}>See Images</button>

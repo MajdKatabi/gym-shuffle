@@ -151,7 +151,10 @@ const ShufflePlan: React.FC = () => {
     const renderAlternativesAndVariations = () => {
         return (
             <div className="alternatives-variations">
-                <h2>Alternatives</h2>
+                <hr></hr>
+                <div className="alternatives-h2">
+                    <h2>Alternatives</h2>
+                </div>
                 <div className="alternatives-grid">
                     {alternatives.length > 0 ? (
                         alternatives.map((alt) => (
@@ -164,10 +167,13 @@ const ShufflePlan: React.FC = () => {
                             </div>
                         ))
                     ) : (
-                        <p>No alternatives available.</p>
+                        <div className="no-data-message">No alternatives available.</div>
                     )}
                 </div>
-                <h2>Variations</h2>
+                <hr></hr>
+                <div className="variations-h2">
+                    <h2>Variations</h2>
+                </div>
                 <div className="variations-grid">
                     {variations.length > 0 ? (
                         variations.map((varia) => (
@@ -180,7 +186,7 @@ const ShufflePlan: React.FC = () => {
                             </div>
                         ))
                     ) : (
-                        <p>No variations available.</p>
+                        <div className="no-data-message">No variations available.</div> 
                     )}
                 </div>
             </div>
@@ -210,7 +216,6 @@ const ShufflePlan: React.FC = () => {
                 {renderDayButtons()}
             </div>
             {renderExercises()} 
-            <hr></hr>
             {showPopup && selectedExerciseDetails && (
                 <ExercisePopup
                     exerciseName={selectedExerciseDetails.name}
