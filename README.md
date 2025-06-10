@@ -70,8 +70,3 @@ To get started with GymShuffle, follow these steps:
 ## Contributing 📌
 
 Contributions are welcome! If you have suggestions for improvements or new features, please fork the repository and submit a pull request.
-
-## Acknowledgments 📌
-
-- Thanks to the contributors and the open-source community for their support and resources.
-- Special thanks to the fitness community for their feedback and inspiration.
